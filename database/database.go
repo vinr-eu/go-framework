@@ -10,7 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"os"
 	"time"
-	"vinr.eu/go-framework/app"
 	"vinr.eu/go-framework/log"
 )
 
@@ -68,7 +67,7 @@ func (r *Repository) GetName() string {
 	return r.database.Name()
 }
 
-func (r *Repository) Find(collectionName string, filter interface{}, pageSize int, pageNumber int, results interface{}, sortParams ...string) *app.Error {
+func (r *Repository) Find(collectionName string, filter interface{}, pageSize int, pageNumber int, results interface{}, sortParams ...string) error {
 	findOptions := options.Find()
 	findOptions.SetSkip(int64((pageNumber - 1) * pageSize))
 	findOptions.SetLimit(int64(pageSize))
@@ -89,87 +88,87 @@ func (r *Repository) Find(collectionName string, filter interface{}, pageSize in
 	defer cancel()
 	cur, err := r.database.Collection(collectionName).Find(ctx, filter, findOptions)
 	if err != nil {
-		return app.NewError(errors.WithStack(err))
+		return errors.WithStack(err)
 	}
 	ctx, cancel = context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 	err = cur.All(ctx, results)
 	if err != nil {
-		return app.NewError(errors.WithStack(err))
+		return errors.WithStack(err)
 	}
 	return nil
 }
 
-func (r *Repository) FindById(collectionName string, id string, entity interface{}) *app.Error {
+func (r *Repository) FindById(collectionName string, id string, entity interface{}) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 	err := r.database.Collection(collectionName).FindOne(ctx, bson.M{"_id": id}).Decode(entity)
 	if err != nil {
-		return app.NewError(errors.WithStack(err))
+		return errors.WithStack(err)
 	}
 	return nil
 }
 
-func (r *Repository) Create(collectionName string, _ string, entity interface{}) *app.Error {
+func (r *Repository) Create(collectionName string, _ string, entity interface{}) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 	_, err := r.database.Collection(collectionName).InsertOne(ctx, entity)
 	if err != nil {
-		return app.NewError(errors.WithStack(err))
+		return errors.WithStack(err)
 	}
 	return nil
 }
 
-func (r *Repository) Update(collectionName string, id string, entity interface{}) *app.Error {
+func (r *Repository) Update(collectionName string, id string, entity interface{}) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 	_, err := r.database.Collection(collectionName).ReplaceOne(ctx, bson.M{"_id": id}, entity)
 	if err != nil {
-		return app.NewError(errors.WithStack(err))
+		return errors.WithStack(err)
 	}
 	return nil
 }
 
-func (r *Repository) Delete(collectionName string, id string) *app.Error {
+func (r *Repository) Delete(collectionName string, id string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 	_, err := r.database.Collection(collectionName).DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil {
-		return app.NewError(errors.WithStack(err))
+		return errors.WithStack(err)
 	}
 	return nil
 }
 
-func (r *Repository) Aggregate(collectionName string, pipeline interface{}, results interface{}) *app.Error {
+func (r *Repository) Aggregate(collectionName string, pipeline interface{}, results interface{}) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 	cur, err := r.database.Collection(collectionName).Aggregate(ctx, pipeline)
 	if err != nil {
-		return app.NewError(errors.WithStack(err))
+		return errors.WithStack(err)
 	}
 	ctx, cancel = context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 	err = cur.All(ctx, results)
 	if err != nil {
-		return app.NewError(errors.WithStack(err))
+		return errors.WithStack(err)
 	}
 	return nil
 }
 
-func (r *Repository) NewBucket() (*gridfs.Bucket, *app.Error) {
+func (r *Repository) NewBucket() (*gridfs.Bucket, error) {
 	bucket, err := gridfs.NewBucket(r.database)
 	if err != nil {
-		return nil, app.NewError(errors.WithStack(err))
+		return nil, errors.WithStack(err)
 	}
 	return bucket, nil
 }
 
-func (r *Repository) Count(collectionName string, filter interface{}) (int64, *app.Error) {
+func (r *Repository) Count(collectionName string, filter interface{}) (int64, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 	count, err := r.database.Collection(collectionName).CountDocuments(ctx, filter)
 	if err != nil {
-		return 0, app.NewError(errors.WithStack(err))
+		return 0, errors.WithStack(err)
 	}
 	return count, nil
 }

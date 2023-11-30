@@ -18,10 +18,10 @@ type QueryHandlerFunc[T any] func(*database.Repository, map[string]string) (*T, 
 type QueryByIDHandlerFunc[T any] func(*database.Repository, string, map[string]string) (*T, *app.Error)
 type QueryByParamsHandlerFunc[T any] func(*database.Repository, map[string]string, map[string]string) (*T, *app.Error)
 type AppErrorHandlerFunc func(appErr app.Error, w http.ResponseWriter, r *http.Request)
-type AuthHeaderMapFunc func(r *http.Request) map[string]string
+type HeaderMapFunc func(r *http.Request) map[string]string
 
 func NewCommandHandler[T any](repo *database.Repository, handlerFunc CommandHandlerFunc[T],
-	appErrorhandlerFunc AppErrorHandlerFunc, authHeaderMapFunc AuthHeaderMapFunc) http.Handler {
+	appErrorhandlerFunc AppErrorHandlerFunc, authHeaderMapFunc HeaderMapFunc) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var command T
 		if err := json.NewDecoder(r.Body).Decode(&command); err != nil {
@@ -37,7 +37,7 @@ func NewCommandHandler[T any](repo *database.Repository, handlerFunc CommandHand
 }
 
 func NewCommandWithResponseHandler[T any, R any](repo *database.Repository, handlerFunc CommandWithResponseHandlerFunc[T, R],
-	appErrorhandlerFunc AppErrorHandlerFunc, authHeaderMapFunc AuthHeaderMapFunc) http.Handler {
+	appErrorhandlerFunc AppErrorHandlerFunc, authHeaderMapFunc HeaderMapFunc) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger := log.NewLogger()
 		var command T
@@ -57,7 +57,7 @@ func NewCommandWithResponseHandler[T any, R any](repo *database.Repository, hand
 }
 
 func NewQueryByParamsHandler[T any](repo *database.Repository, handlerFunc QueryByParamsHandlerFunc[T],
-	appErrorhandlerFunc AppErrorHandlerFunc, authHeaderMapFunc AuthHeaderMapFunc) http.Handler {
+	appErrorhandlerFunc AppErrorHandlerFunc, authHeaderMapFunc HeaderMapFunc) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger := log.NewLogger()
 		response, appErr := handlerFunc(repo, extractQueryParams(r), authHeaderMapFunc(r))
@@ -70,7 +70,7 @@ func NewQueryByParamsHandler[T any](repo *database.Repository, handlerFunc Query
 }
 
 func NewQueryByIDHandler[T any](repo *database.Repository, handlerFunc QueryByIDHandlerFunc[T],
-	appErrorhandlerFunc AppErrorHandlerFunc, authHeaderMapFunc AuthHeaderMapFunc) http.Handler {
+	appErrorhandlerFunc AppErrorHandlerFunc, authHeaderMapFunc HeaderMapFunc) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger := log.NewLogger()
 		response, appErr := handlerFunc(repo, getIdFromPath(r), authHeaderMapFunc(r))
@@ -83,7 +83,7 @@ func NewQueryByIDHandler[T any](repo *database.Repository, handlerFunc QueryByID
 }
 
 func NewQueryHandler[T any](repo *database.Repository, handlerFunc QueryHandlerFunc[T],
-	appErrorhandlerFunc AppErrorHandlerFunc, authHeaderMapFunc AuthHeaderMapFunc) http.Handler {
+	appErrorhandlerFunc AppErrorHandlerFunc, authHeaderMapFunc HeaderMapFunc) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger := log.NewLogger()
 		response, appErr := handlerFunc(repo, authHeaderMapFunc(r))
