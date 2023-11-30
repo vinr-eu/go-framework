@@ -4,8 +4,8 @@ import (
 	"vinr.eu/go-framework/app"
 	"vinr.eu/go-framework/database"
 	"vinr.eu/go-framework/user-service/internal/code"
+	"vinr.eu/go-framework/user-service/internal/domain/user"
 	"vinr.eu/go-framework/user-service/pkg/api/managing"
-	"vinr.eu/go-framework/user-service/pkg/domain/user"
 )
 
 func ReadUser(repository *database.Repository, id string, _ map[string]string) (*managing.ReadUserResponse, *app.Error) {
