@@ -19,42 +19,41 @@ type Repository struct {
 	database *mongo.Database
 }
 
-type TenantModel struct {
-	Id          string     `bson:"_id"`
-	TenantId    string     `bson:"tenantId"`
-	CreatedTime time.Time  `bson:"createdTime"`
-	UpdatedTime *time.Time `bson:"updatedTime"`
-}
-
-func NewMongoDBRepository(timeout time.Duration, dbName string, opts ...*options.ClientOptions) (*Repository, error) {
+func NewMongoDBRepository(timeout time.Duration, databaseName string, opts ...*options.ClientOptions) (*Repository, error) {
+	// Creating logger without any attributes as this is startup.
 	logger := log.NewLogger()
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 	if len(opts) == 0 {
 		opts = append(opts, options.Client().ApplyURI(os.Getenv("MONGO_DB_URI")))
 	}
+	// Connect to MongoDB first.
 	client, err := mongo.Connect(ctx, opts...)
 	if err != nil {
 		logger.Error("Connect failed", "err", err)
 		return nil, err
 	}
+	// Ping and check the connection.
 	err = client.Ping(ctx, readpref.Primary())
 	if err != nil {
 		logger.Error("Ping failed", "err", err)
 		return nil, err
 	}
-	database := client.Database(dbName)
-	logger.Info("MongoDB client connected", "dbName", dbName)
+	database := client.Database(databaseName)
+	logger.Info("MongoDB client connected", "databaseName", databaseName)
+	// Return repository for use throughout the application.
 	return &Repository{timeout: timeout, client: client, database: database}, nil
 }
 
 func (r *Repository) Disconnect() {
+	// Creating logger without any attributes as this is shutdown.
 	logger := log.NewLogger()
 	if r.client == nil {
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
+	// Disconnect from MongoDB.
 	err := r.client.Disconnect(ctx)
 	if err != nil {
 		logger.Error("MongoDB client disconnect failed", "err", err)
@@ -99,7 +98,7 @@ func (r *Repository) Find(collectionName string, filter interface{}, pageSize in
 	return nil
 }
 
-func (r *Repository) FindById(collectionName string, id string, entity interface{}) error {
+func (r *Repository) FindByID(collectionName string, id string, entity interface{}) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 	err := r.database.Collection(collectionName).FindOne(ctx, bson.M{"_id": id}).Decode(entity)
@@ -107,6 +106,16 @@ func (r *Repository) FindById(collectionName string, id string, entity interface
 		return errors.WithStack(err)
 	}
 	return nil
+}
+
+func (r *Repository) Count(collectionName string, filter interface{}) (int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+	defer cancel()
+	count, err := r.database.Collection(collectionName).CountDocuments(ctx, filter)
+	if err != nil {
+		return 0, errors.WithStack(err)
+	}
+	return count, nil
 }
 
 func (r *Repository) Create(collectionName string, _ string, entity interface{}) error {
@@ -161,14 +170,4 @@ func (r *Repository) NewBucket() (*gridfs.Bucket, error) {
 		return nil, errors.WithStack(err)
 	}
 	return bucket, nil
-}
-
-func (r *Repository) Count(collectionName string, filter interface{}) (int64, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
-	defer cancel()
-	count, err := r.database.Collection(collectionName).CountDocuments(ctx, filter)
-	if err != nil {
-		return 0, errors.WithStack(err)
-	}
-	return count, nil
 }

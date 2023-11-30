@@ -13,7 +13,7 @@ import (
 
 type CleanupFunc func()
 
-func StartHttpServer(mux *http.ServeMux, idleConnectionsClosed chan struct{}) {
+func StartHTTPServer(mux *http.ServeMux, idleConnectionsClosed chan struct{}) {
 	logger := log.NewLogger()
 
 	// Create http server

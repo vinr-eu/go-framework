@@ -10,7 +10,7 @@ import (
 
 func ViewUser(repository *database.Repository, id string, _ map[string]string) (*managing.ViewUserResponse, *app.Error) {
 	var entity user.Entity
-	err := repository.FindById(user.CollectionName, id, &entity)
+	err := repository.FindByID(user.CollectionName, id, &entity)
 	if err != nil {
 		return nil, app.NewErrorWithCode(err, code.ErrCode101DataFetchFailed)
 	}
