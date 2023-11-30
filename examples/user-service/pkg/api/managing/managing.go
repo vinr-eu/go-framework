@@ -1,6 +1,6 @@
 package managing
 
-type ReadUserResponse struct {
+type ViewUserResponse struct {
 	Id           string `json:"id"`
 	FirstName    string `json:"firstName"`
 	LastName     string `json:"lastName"`

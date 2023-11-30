@@ -1,0 +1,16 @@
+@startuml
+left to right direction
+actor "Super admin" as A_SU
+actor "User" as A_USER
+package Managing {
+    usecase "View user" as UC_US_M_1
+    usecase "Add user" as UC_US_M_2
+}
+package Common {
+    usecase "View user options" as UC_US_C_1
+}
+A_SU -> UC_US_M_1
+A_SU -> UC_US_M_2
+A_SU -> UC_US_C_1
+A_USER -> UC_US_C_1
+@enduml

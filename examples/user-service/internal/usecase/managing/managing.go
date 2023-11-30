@@ -8,13 +8,13 @@ import (
 	"vinr.eu/go-framework/user-service/pkg/domain/user"
 )
 
-func ReadUser(repository *database.Repository, id string, _ map[string]string) (*managing.ReadUserResponse, *app.Error) {
+func ViewUser(repository *database.Repository, id string, _ map[string]string) (*managing.ViewUserResponse, *app.Error) {
 	var entity user.Entity
 	err := repository.FindById(user.CollectionName, id, &entity)
 	if err != nil {
 		return nil, app.NewErrorWithCode(err, code.ErrCode101DataFetchFailed)
 	}
-	response := managing.ReadUserResponse{
+	response := managing.ViewUserResponse{
 		Id:           entity.Id,
 		FirstName:    entity.FirstName,
 		LastName:     entity.LastName,

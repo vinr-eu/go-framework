@@ -26,8 +26,8 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.Handle("/managing/queries/read-user/",
-		handler.NewQueryByIDHandler[managingtypes.ReadUserResponse](repository, managing.ReadUser, handleAppError, mapHeaders))
+	mux.Handle("/managing/queries/view-user/",
+		handler.NewQueryByIDHandler[managingtypes.ViewUserResponse](repository, managing.ViewUser, handleAppError, mapHeaders))
 
 	server.StartHttpServer(mux, idleConnectionsClosed)
 
