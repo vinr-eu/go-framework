@@ -19,3 +19,9 @@
 
 # Go workspace file
 go.work
+
+# IntelliJ
+.idea
+*.ipr
+*.iml
+*.iws
