@@ -13,11 +13,10 @@ func ViewUser(repository *database.Repository, id string, _ map[string]string) (
 	if err := repository.FindByID(user.CollectionName, id, &entity); err != nil { // Simplify as there are no returns.
 		return nil, app.NewErrorWithCode(err, code.ErrCode101DataFetchFailed)
 	}
-	response := managing.ViewUserResponse{
+	return &managing.ViewUserResponse{
 		Id:           entity.Id,
 		FirstName:    entity.FirstName,
 		LastName:     entity.LastName,
 		EmailAddress: entity.EmailAddress,
-	}
-	return &response, nil
+	}, nil
 }
