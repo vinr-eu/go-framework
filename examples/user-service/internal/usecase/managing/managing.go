@@ -10,15 +10,13 @@ import (
 
 func ViewUser(repository *database.Repository, id string, _ map[string]string) (*managing.ViewUserResponse, *app.Error) {
 	var entity user.Entity
-	err := repository.FindByID(user.CollectionName, id, &entity)
-	if err != nil {
+	if err := repository.FindByID(user.CollectionName, id, &entity); err != nil {
 		return nil, app.NewErrorWithCode(err, code.ErrCode101DataFetchFailed)
 	}
-	response := managing.ViewUserResponse{
+	return &managing.ViewUserResponse{
 		Id:           entity.Id,
 		FirstName:    entity.FirstName,
 		LastName:     entity.LastName,
 		EmailAddress: entity.EmailAddress,
-	}
-	return &response, nil
+	}, nil
 }
