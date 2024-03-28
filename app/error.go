@@ -23,6 +23,10 @@ func NewErrorWithCode(err error, code code.Code) *Error {
 	return &Error{err: err, code: code}
 }
 
+func NewErrorWithCodeAndMsg(code code.Code) *Error {
+	return &Error{err: errors.WithStack(errors.New(code.GetText())), code: code}
+}
+
 func (e *Error) Error() string {
 	return e.err.Error()
 }
