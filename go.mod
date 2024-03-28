@@ -1,4 +1,4 @@
-module vinr.eu/go-framework
+module github.com/vinr-eu/go-framework
 
 go 1.22
 

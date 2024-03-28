@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"github.com/pkg/errors"
+	"github.com/vinr-eu/go-framework/log"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
@@ -10,7 +11,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"os"
 	"time"
-	"vinr.eu/go-framework/log"
 )
 
 type Repository struct {

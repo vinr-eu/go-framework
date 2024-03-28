@@ -3,13 +3,13 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"github.com/vinr-eu/go-framework/app"
+	"github.com/vinr-eu/go-framework/database"
+	"github.com/vinr-eu/go-framework/log"
 	"log/slog"
 	"net"
 	"net/http"
 	"strings"
-	"vinr.eu/go-framework/app"
-	"vinr.eu/go-framework/database"
-	"vinr.eu/go-framework/log"
 )
 
 type CommandHandlerFunc[T any] func(*database.Repository, T, map[string]string) *app.Error

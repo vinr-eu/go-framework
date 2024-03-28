@@ -1,11 +1,11 @@
 package managing
 
 import (
-	"vinr.eu/go-framework/app"
-	"vinr.eu/go-framework/database"
-	"vinr.eu/go-framework/user-service/internal/code"
-	"vinr.eu/go-framework/user-service/pkg/api/managing"
-	"vinr.eu/go-framework/user-service/pkg/domain/user"
+	"github.com/vinr-eu/go-framework/app"
+	"github.com/vinr-eu/go-framework/database"
+	"github.com/vinr-eu/go-framework/user-service/internal/code"
+	"github.com/vinr-eu/go-framework/user-service/pkg/api/managing"
+	"github.com/vinr-eu/go-framework/user-service/pkg/domain/user"
 )
 
 func ViewUser(repository *database.Repository, id string, _ map[string]string) (*managing.ViewUserResponse, *app.Error) {

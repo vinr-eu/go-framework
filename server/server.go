@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/vinr-eu/go-framework/log"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
-	"vinr.eu/go-framework/log"
 )
 
 type CleanupFunc func()

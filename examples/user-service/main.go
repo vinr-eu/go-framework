@@ -1,18 +1,18 @@
 package main
 
 import (
+	"github.com/vinr-eu/go-framework/app"
+	"github.com/vinr-eu/go-framework/database"
+	"github.com/vinr-eu/go-framework/handler"
+	"github.com/vinr-eu/go-framework/log"
+	"github.com/vinr-eu/go-framework/server"
+	"github.com/vinr-eu/go-framework/user-service/internal/code"
+	"github.com/vinr-eu/go-framework/user-service/internal/usecase/managing"
+	managingtypes "github.com/vinr-eu/go-framework/user-service/pkg/api/managing"
 	"log/slog"
 	"net/http"
 	"os"
 	"time"
-	"vinr.eu/go-framework/app"
-	"vinr.eu/go-framework/database"
-	"vinr.eu/go-framework/handler"
-	"vinr.eu/go-framework/log"
-	"vinr.eu/go-framework/server"
-	"vinr.eu/go-framework/user-service/internal/code"
-	"vinr.eu/go-framework/user-service/internal/usecase/managing"
-	managingtypes "vinr.eu/go-framework/user-service/pkg/api/managing"
 )
 
 func main() {

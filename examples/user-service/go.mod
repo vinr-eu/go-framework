@@ -1,10 +1,10 @@
-module vinr.eu/go-framework/user-service
+module github.com/vinr-eu/go-framework/user-service
 
 go 1.22
 
-replace vinr.eu/go-framework => ./../../
+replace github.com/vinr-eu/go-framework => ./../../
 
-require vinr.eu/go-framework v0.0.0-00010101000000-000000000000
+require github.com/vinr-eu/go-framework v0.0.0-00010101000000-000000000000
 
 require (
 	github.com/golang/snappy v0.0.1 // indirect

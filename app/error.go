@@ -3,7 +3,7 @@ package app
 import (
 	"fmt"
 	"github.com/pkg/errors"
-	"vinr.eu/go-framework/code"
+	"github.com/vinr-eu/go-framework/code"
 )
 
 type Error struct {
