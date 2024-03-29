@@ -58,7 +58,7 @@ func (r *Repository) Disconnect() {
 	if err != nil {
 		logger.Error("MongoDB client disconnect failed", "err", err)
 	} else {
-		logger.Info("MongoDB client disconnected", "dbName", r.database.Name())
+		logger.Info("MongoDB client disconnected", "databaseName", r.database.Name())
 	}
 }
 
