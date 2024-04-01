@@ -128,7 +128,7 @@ func (r *Repository) Create(collectionName string, _ string, entity interface{})
 	return nil
 }
 
-func (r *Repository) Update(collectionName string, id string, entity interface{}) error {
+func (r *Repository) UpdateByID(collectionName string, id string, entity interface{}) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 	_, err := r.database.Collection(collectionName).ReplaceOne(ctx, bson.M{"_id": id}, entity)
@@ -138,7 +138,17 @@ func (r *Repository) Update(collectionName string, id string, entity interface{}
 	return nil
 }
 
-func (r *Repository) Delete(collectionName string, id string) error {
+func (r *Repository) Delete(collectionName string, filter interface{}) error {
+	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+	defer cancel()
+	_, err := r.database.Collection(collectionName).DeleteMany(ctx, filter)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
+}
+
+func (r *Repository) DeleteByID(collectionName string, id string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 	_, err := r.database.Collection(collectionName).DeleteOne(ctx, bson.M{"_id": id})
