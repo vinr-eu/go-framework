@@ -15,7 +15,15 @@ import (
 
 var ErrDataNotFound = be.New("data not found")
 
-func DoHTTP(method string, url string, request interface{}, response interface{}, headers ...string) error {
+func Get(url string, response interface{}, headers ...string) error {
+	return doHTTP("GET", url, nil, response, headers...)
+}
+
+func Post(url string, request interface{}, response interface{}, headers ...string) error {
+	return doHTTP("POST", url, request, response, headers...)
+}
+
+func doHTTP(method string, url string, request interface{}, response interface{}, headers ...string) error {
 	// Should be parameterized some day... over the rainbow.
 	client := &http.Client{
 		Timeout: 10 * time.Second,
